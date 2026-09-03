@@ -243,6 +243,226 @@ int main()
             &bridgeLowerRight
         );
 
+        SDL_Rect roadFirst = {
+            0,
+            600,
+            580,
+            70
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadFirst
+        );
+
+        SDL_Rect roadSecond = {
+            510,
+            135,
+            70,
+            480
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadSecond
+        );
+
+        SDL_Rect roadThird = {
+            510,
+            135,
+            170,
+            70
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadThird
+        );
+
+        SDL_Rect roadFourth = {
+            790,
+            135,
+            190,
+            70
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadFourth
+        );
+
+        SDL_Rect roadFive = {
+            980,
+            135,
+            70,
+            495
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadFive
+        );
+
+        SDL_Rect roadSix = {
+            980,
+            740,
+            70,
+            100
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadSix
+        );
+
+        SDL_Rect roadSeven = {
+            980,
+            770,
+            425,
+            70
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadSeven
+        );
+
+        SDL_Rect roadEight = {
+            1405,
+            740,
+            70,
+            100
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadEight
+        );
+
+        SDL_Rect roadNine = {
+            1405,
+            440,
+            70,
+            190
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadNine
+        );
+
+        SDL_Rect roadTen = {
+            1405,
+            370,
+            515,
+            70
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            145,
+            142,
+            133,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &roadTen
+        );
+
+        SDL_Rect castle = {
+            1700,
+            205,
+            220,
+            615
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            41,
+            49,
+            51,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &castle
+        );
+
         SDL_RenderPresent(renderer);
     }
 
