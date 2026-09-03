@@ -18,6 +18,9 @@ struct Bot {
     int health;
     int maxHealth;
 
+    int reward;
+    int castleDamage;
+
     int currentPoint;
     bool reachedCastle;
     bool alive;
@@ -84,10 +87,16 @@ int main()
         50.0f,
         100,
         100,
+        50,
+        50,
         0,
         false,
         true
     };
+
+    int playerMoney = 0;
+    int castleHealth = 1000;
+    int castleMaxHealth = 1000;
 
     Uint64 previousTime = SDL_GetTicks64();
 
@@ -119,6 +128,9 @@ int main()
             bot.health = 0;
             bot.alive = false;
             std::cout << "Bot died" << std::endl;
+
+            playerMoney += bot.reward;
+            std::cout << "Reward " << bot.reward << " Player Money: " << playerMoney << std::endl;
         }
 
         if (bot.alive && !bot.reachedCastle && bot.currentPoint < static_cast<int>(path.size()))
@@ -140,9 +152,20 @@ int main()
                 }
         }
 
-        if (bot.currentPoint >= static_cast<int>(path.size()))
+        if (bot.currentPoint >= static_cast<int>(path.size()) && bot.alive && !bot.reachedCastle)
             {
                 bot.reachedCastle = true;
+                bot.alive = false;
+
+                castleHealth -= bot.castleDamage;
+                if (castleHealth < 0)
+                {
+                    castleHealth = 0;
+                }
+
+                std::cout << "Бот достиг крепости" << std::endl;
+                std::cout << "Крепость получила " << bot.castleDamage << "урона. Осталось HP: "
+                << castleHealth << std::endl;
         }
 
         SDL_SetRenderDrawColor(
