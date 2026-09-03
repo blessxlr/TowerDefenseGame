@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -isystem /usr/include/SDL2
 
-CXX_FLAGS = -D_REENTRANT
+CXX_FLAGS = -std=gnu++17 -D_REENTRANT
 
