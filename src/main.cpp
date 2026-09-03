@@ -11,10 +11,16 @@ struct Point {
 struct Bot {
     float x;
     float y;
+
     int size;
     float speed;
+
+    int health;
+    int maxHealth;
+
     int currentPoint;
     bool reachedCastle;
+    bool alive;
 };
 
 int main()
@@ -75,9 +81,12 @@ int main()
         15.0f,
         635.0f,
         30,
-        180.0f,
+        50.0f,
+        100,
+        100,
         0,
-        false
+        false,
+        true
     };
 
     Uint64 previousTime = SDL_GetTicks64();
@@ -94,9 +103,25 @@ int main()
             {
                 running = false;
             }
+
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+            {
+                if (bot.alive)
+                {
+                    bot.health -= 25;
+                    std::cout << "Bot has a damage. HP: " << bot.health << std::endl;
+                }
+            }
         }
 
-        if (!bot.reachedCastle && bot.currentPoint < static_cast<int>(path.size())) 
+        if (bot.health <= 0 && bot.alive)
+        {
+            bot.health = 0;
+            bot.alive = false;
+            std::cout << "Bot died" << std::endl;
+        }
+
+        if (bot.alive && !bot.reachedCastle && bot.currentPoint < static_cast<int>(path.size()))
             {
                 Point target = path[bot.currentPoint];
                 float dx = target.x - bot.x;
@@ -530,7 +555,7 @@ int main()
             &castle
         );
 
-        if (!bot.reachedCastle) {
+        if (bot.alive && !bot.reachedCastle) {
             SDL_Rect botRect = {
                 static_cast<int>(bot.x - bot.size / 2),
                 static_cast<int>(bot.y - bot.size / 2),
