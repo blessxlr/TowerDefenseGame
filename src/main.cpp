@@ -80,19 +80,13 @@ int main()
         {1685, 405}
     };
 
-    Bot bot = {
-        15.0f,
-        635.0f,
-        30,
-        50.0f,
-        100,
-        100,
-        50,
-        50,
-        0,
-        false,
-        true
-    };
+    std::vector<Bot> bots;
+
+    int botsSpawned = 0;
+    int maxBots = 5;
+
+    float spawnTimer = 2.0f;
+    float spawnInterval = 2.0f;
 
     int playerMoney = 0;
     int castleHealth = 1000;
@@ -115,57 +109,92 @@ int main()
 
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
             {
-                if (bot.alive)
-                {
-                    bot.health -= 25;
-                    std::cout << "Bot has a damage. HP: " << bot.health << std::endl;
-                }
+                for (Bot &bot : bots)
+                    {
+                        if (bot.alive)
+                        {
+                            bot.health -= 25;
+                            std::cout << "Bot has a damage. HP: " << bot.health << std::endl;
+                        }
+                    }
+             }
+        }
+
+        if (botsSpawned < maxBots)
+        {
+            spawnTimer += deltaTime;
+            if (spawnTimer >= spawnInterval)
+            {
+                bots.push_back({
+                    15.0f,
+                    635.0f,
+                    30,
+                    50.0f,
+                    100,
+                    100,
+                    10,
+                    50,
+                    0,
+                    false,
+                    true
+                });
+            botsSpawned++;
+            spawnTimer = 0.0f;
+            std::cout << "Added Bot №" << botsSpawned << std::endl;
             }
         }
 
-        if (bot.health <= 0 && bot.alive)
+        for (Bot &bot : bots)
         {
-            bot.health = 0;
-            bot.alive = false;
-            std::cout << "Bot died" << std::endl;
-
-            playerMoney += bot.reward;
-            std::cout << "Reward " << bot.reward << " Player Money: " << playerMoney << std::endl;
-        }
-
-        if (bot.alive && !bot.reachedCastle && bot.currentPoint < static_cast<int>(path.size()))
+            if (bot.health <= 0 && bot.alive)
             {
-                Point target = path[bot.currentPoint];
-                float dx = target.x - bot.x;
-                float dy = target.y - bot.y;
-                float distance = std::sqrt(dx*dx + dy*dy);
-                float movement = bot.speed * deltaTime;
-
-                if (distance <= movement) {
-                    bot.x = target.x;
-                    bot.y = target.y;
-                    bot.currentPoint++;
-                }
-                else {
-                    bot.x += (dx/distance) * movement;
-                    bot.y += (dy/distance) * movement;
-                }
-        }
-
-        if (bot.currentPoint >= static_cast<int>(path.size()) && bot.alive && !bot.reachedCastle)
-            {
-                bot.reachedCastle = true;
+                bot.health = 0;
                 bot.alive = false;
+                std::cout << "Bot died" << std::endl;
 
-                castleHealth -= bot.castleDamage;
-                if (castleHealth < 0)
+                playerMoney += bot.reward;
+                std::cout << "Reward " << bot.reward << " Player Money: " << playerMoney << std::endl;
+            }
+        }
+        for (Bot &bot : bots)
+        {
+            if (bot.alive && !bot.reachedCastle && bot.currentPoint < static_cast<int>(path.size()))
                 {
-                    castleHealth = 0;
-                }
+                    Point target = path[bot.currentPoint];
+                    float dx = target.x - bot.x;
+                    float dy = target.y - bot.y;
+                    float distance = std::sqrt(dx*dx + dy*dy);
+                    float movement = bot.speed * deltaTime;
 
-                std::cout << "Бот достиг крепости" << std::endl;
-                std::cout << "Крепость получила " << bot.castleDamage << "урона. Осталось HP: "
-                << castleHealth << std::endl;
+                    if (distance <= movement) {
+                        bot.x = target.x;
+                        bot.y = target.y;
+                        bot.currentPoint++;
+                    }
+                    else {
+                        bot.x += (dx/distance) * movement;
+                        bot.y += (dy/distance) * movement;
+                    }
+             }
+         }
+
+        for (Bot &bot : bots)
+        {
+            if (bot.currentPoint >= static_cast<int>(path.size()) && bot.alive && !bot.reachedCastle)
+                {
+                    bot.reachedCastle = true;
+                    bot.alive = false;
+
+                    castleHealth -= bot.castleDamage;
+                    if (castleHealth < 0)
+                    {
+                         castleHealth = 0;
+                    }
+
+                    std::cout << "Бот достиг крепости" << std::endl;
+                    std::cout << "Крепость получила " << bot.castleDamage << "урона. Осталось HP: "
+                    << castleHealth << std::endl;
+            }
         }
 
         SDL_SetRenderDrawColor(
@@ -578,25 +607,28 @@ int main()
             &castle
         );
 
-        if (bot.alive && !bot.reachedCastle) {
-            SDL_Rect botRect = {
-                static_cast<int>(bot.x - bot.size / 2),
-                static_cast<int>(bot.y - bot.size / 2),
-                bot.size,
-                bot.size
-            };
-            SDL_SetRenderDrawColor(
-                renderer,
-                200,
-                40,
-                40,
-                255
-            );
-            SDL_RenderFillRect(
-                renderer,
-                &botRect
-            );
-        };
+        for (const Bot &bot : bots)
+        {
+            if (bot.alive && !bot.reachedCastle) {
+                SDL_Rect botRect = {
+                    static_cast<int>(bot.x - bot.size / 2),
+                    static_cast<int>(bot.y - bot.size / 2),
+                    bot.size,
+                    bot.size
+                };
+                SDL_SetRenderDrawColor(
+                    renderer,
+                    200,
+                    40,
+                    40,
+                    255
+                );
+                SDL_RenderFillRect(
+                    renderer,
+                    &botRect
+                );
+            }
+        }
 
         SDL_RenderPresent(renderer);
     }
