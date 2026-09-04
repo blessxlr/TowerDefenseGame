@@ -165,6 +165,58 @@ int main()
                         }
                     }
              }
+
+             if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && !gameOver && !gameWon)
+             {
+                 int mouseX = event.button.x;
+                 int mouseY = event.button.y;
+                 for (Tower &tower : towers)
+                 {
+                     bool mouseInsideTower = mouseX >= tower.rect.x && mouseX <= tower.rect.x + tower.rect.w &&
+                     mouseY >= tower.rect.y && mouseY <= tower.rect.y + tower.rect.h;
+
+                     if (mouseInsideTower)
+                     {
+                         if (!tower.built)
+                         {
+                             if (playerMoney >= 30)
+                             {
+                                 tower.built = true;
+                                 tower.level = 1;
+                                 playerMoney -= 30;
+                                 tower.range = 180;
+                                 tower.damage = 25;
+                                 tower.attackCooldown = 1.0f;
+                                 tower.attackTimer = 0.0f;
+                                 std::cout << "Tower built, level 1" << std::endl;
+                                 std::cout << "Money: " << playerMoney << std::endl;
+                             }
+                             else
+                             {
+                                 std::cout << "No money ftt" << std::endl;
+                             }
+                         }
+                         else if (tower.level == 1)
+                         {
+                             if (playerMoney >= 100)
+                             {
+                                 tower.level = 2;
+                                 playerMoney -= 100;
+                                 tower.range = 250;
+                                 tower.damage = 60;
+                                 tower.attackCooldown = 0.7f;
+                                 tower.attackTimer = 0.0f;
+                                 std::cout << "Tower upgrate, level 2" << std::endl;
+                                 std::cout << "Money " << playerMoney << std::endl;
+                             }
+                             else
+                             {
+                                 std::cout << "No money ftt" << std::endl;
+                             }
+                         }
+                     }
+                 }
+             }
         }
 
         if (!gameOver && !gameWon)
