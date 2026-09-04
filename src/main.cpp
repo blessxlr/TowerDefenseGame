@@ -82,15 +82,25 @@ int main()
 
     std::vector<Bot> bots;
 
+    int currentWave = 1;
+
     int botsSpawned = 0;
     int maxBots = 5;
 
     float spawnTimer = 2.0f;
     float spawnInterval = 2.0f;
 
+    bool waitingForNextWave = false;
+    float waveTimer = 0.0f;
+    float waveInterval = 5.0f;
+    bool gameWavesFinished = false;
+
     int playerMoney = 0;
     int castleHealth = 1000;
     int castleMaxHealth = 1000;
+
+    bool gameOver = false;
+    bool gameWon = false;
 
     Uint64 previousTime = SDL_GetTicks64();
 
@@ -107,7 +117,7 @@ int main()
                 running = false;
             }
 
-            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE && !gameOver && !gameWon)
             {
                 for (Bot &bot : bots)
                     {
@@ -120,80 +130,160 @@ int main()
              }
         }
 
-        if (botsSpawned < maxBots)
+        if (!gameOver && !gameWon)
         {
-            spawnTimer += deltaTime;
-            if (spawnTimer >= spawnInterval)
+
+            if (botsSpawned < maxBots && !waitingForNextWave && !gameWavesFinished)
             {
-                bots.push_back({
-                    15.0f,
-                    635.0f,
-                    30,
-                    50.0f,
-                    100,
-                    100,
-                    10,
-                    50,
-                    0,
-                    false,
-                    true
-                });
-            botsSpawned++;
-            spawnTimer = 0.0f;
-            std::cout << "Added Bot №" << botsSpawned << std::endl;
-            }
-        }
-
-        for (Bot &bot : bots)
-        {
-            if (bot.health <= 0 && bot.alive)
-            {
-                bot.health = 0;
-                bot.alive = false;
-                std::cout << "Bot died" << std::endl;
-
-                playerMoney += bot.reward;
-                std::cout << "Reward " << bot.reward << " Player Money: " << playerMoney << std::endl;
-            }
-        }
-        for (Bot &bot : bots)
-        {
-            if (bot.alive && !bot.reachedCastle && bot.currentPoint < static_cast<int>(path.size()))
+                spawnTimer += deltaTime;
+                if (spawnTimer >= spawnInterval)
                 {
-                    Point target = path[bot.currentPoint];
-                    float dx = target.x - bot.x;
-                    float dy = target.y - bot.y;
-                    float distance = std::sqrt(dx*dx + dy*dy);
-                    float movement = bot.speed * deltaTime;
-
-                    if (distance <= movement) {
-                        bot.x = target.x;
-                        bot.y = target.y;
-                        bot.currentPoint++;
-                    }
-                    else {
-                        bot.x += (dx/distance) * movement;
-                        bot.y += (dy/distance) * movement;
-                    }
-             }
-         }
-
-        for (Bot &bot : bots)
-        {
-            if (bot.currentPoint >= static_cast<int>(path.size()) && bot.alive && !bot.reachedCastle)
-                {
-                    bot.reachedCastle = true;
-                    bot.alive = false;
-
-                    castleHealth -= bot.castleDamage;
-                    if (castleHealth < 0)
+                    bool isBoss = currentWave == 3 && botsSpawned == 14;
+                    if (isBoss)
                     {
-                         castleHealth = 0;
-                    }
+                        bots.push_back({
+                            15.0f,
+                            635.0f,
+                            50,
+                            40.0f,
+                            300,
+                            300,
+                            50,
+                            125,
+                            0,
+                            false,
+                            true
+                        });
+                    std::cout << "BOSS" << std::endl;
+                }
+                else
+                {
+                    bots.push_back({
+                        15.0f,
+                        635.0f,
+                        30,
+                        50.0f,
+                        100,
+                        100,
+                        10,
+                        50,
+                        0,
+                        false,
+                        true
+                    });
+                std::cout << "RECRUIT" << std::endl;
+                }
+                botsSpawned++;
+                spawnTimer = 0.0f;
+                }
+            }
 
-                    std::cout << "Бот достиг крепости" << std::endl;
-                    std::cout << "Крепость получила " << bot.castleDamage << "урона. Осталось HP: "
-                    << castleHealth << std::endl;
+            for (Bot &bot : bots)
+            {
+                if (bot.health <= 0 && bot.alive)
+                {
+                    bot.health = 0;
+                    bot.alive = false;
+                    std::cout << "Bot died" << std::endl;
+
+                    playerMoney += bot.reward;
+                    std::cout << "Reward " << bot.reward << " Player Money: " << playerMoney << std::endl;
+                }
+            }
+            for (Bot &bot : bots)
+            {
+                if (bot.alive && !bot.reachedCastle && bot.currentPoint < static_cast<int>(path.size()))
+                    {
+                        Point target = path[bot.currentPoint];
+                        float dx = target.x - bot.x;
+                        float dy = target.y - bot.y;
+                        float distance = std::sqrt(dx*dx + dy*dy);
+                        float movement = bot.speed * deltaTime;
+
+                        if (distance <= movement) {
+                            bot.x = target.x;
+                            bot.y = target.y;
+                            bot.currentPoint++;
+                        }
+                        else {
+                            bot.x += (dx/distance) * movement;
+                            bot.y += (dy/distance) * movement;
+                        }
+                 }
+            }
+
+            for (Bot &bot : bots)
+            {
+                if (bot.currentPoint >= static_cast<int>(path.size()) && bot.alive && !bot.reachedCastle)
+                    {
+                        bot.reachedCastle = true;
+                        bot.alive = false;
+
+                        castleHealth -= bot.castleDamage;
+                        if (castleHealth <= 0)
+                        {
+                            castleHealth = 0;
+                            gameOver = true;
+
+                            std::cout << "Catle is crshed" << std::endl;
+                            std::cout << "GAME OVER" << std::endl;
+                        }
+
+                        std::cout << "Бот достиг крепости" << std::endl;
+                        std::cout << "Крепость получила " << bot.castleDamage << "урона. Осталось HP: "
+                        << castleHealth << std::endl;
+                }
+            }
+
+            if (botsSpawned >= maxBots && !waitingForNextWave && !gameWavesFinished)
+            {
+                bool allBotsFinished = true;
+                for (const Bot &bot : bots)
+                {
+                    if (bot.alive)
+                    {
+                        allBotsFinished = false;
+                        break;
+                    }
+                }
+                if (allBotsFinished)
+                {
+                    if (currentWave < 3)
+                    {
+                        waitingForNextWave = true;
+                        waveTimer = 0.0f;
+                        std::cout << "Wave " << currentWave << " is complete." << std::endl;
+                    }
+                    else
+                    {
+                        gameWavesFinished = true;
+                        gameWon = true;
+                        std::cout << "All waves are complete" << std::endl;
+                        std::cout << "WIN" << std::endl;
+                    }
+                }
+            }
+
+            if (waitingForNextWave && !gameWavesFinished)
+            {
+                waveTimer += deltaTime;
+                if (waveTimer >= waveInterval)
+                {
+                    currentWave++;
+                    botsSpawned = 0;
+                    spawnTimer = spawnInterval;
+                    waitingForNextWave = false;
+
+                    if (currentWave == 2)
+                    {
+                        maxBots = 8;
+                    }
+                    else if (currentWave == 3)
+                    {
+                        maxBots = 15;
+                    }
+                    std::cout << "Wave №" << currentWave << std::endl;
+                }
             }
         }
 
