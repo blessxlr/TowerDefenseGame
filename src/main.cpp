@@ -28,10 +28,7 @@ struct Bot {
 
 struct Tower
 {
-    int x;
-    int y;
-
-    int size;
+    SDL_Rect rect;
 
     int level;
 
@@ -41,7 +38,7 @@ struct Tower
     float attackCooldown;
     float attackTimer;
 
-    bool bulit;
+    bool built;
 };
 
 int main()
@@ -99,6 +96,28 @@ int main()
     };
 
     std::vector<Bot> bots;
+
+    std::vector<Tower> towers;
+
+    towers.push_back({
+        {250, 500, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false
+    });
+
+    towers.push_back({
+        {250, 700, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false
+    });
 
     int currentWave = 1;
 
@@ -695,45 +714,57 @@ int main()
             &roadTen
         );
 
-        SDL_Rect towerOne = {
-            250,
-            500,
-            70,
-            70
-        };
+        for (const Tower &tower : towers)
+        {
+            SDL_SetRenderDrawColor(
+                renderer,
+                0,
+                0,
+                0,
+                255
+            );
 
-        SDL_SetRenderDrawColor(
-            renderer,
-            0,
-            0,
-            0,
-            255
-        );
+            SDL_RenderFillRect(
+                renderer,
+                &tower.rect
+            );
 
-        SDL_RenderFillRect(
-            renderer,
-            &towerOne
-        );
+            if (tower.built)
+            {
+                SDL_Rect towerVisual = {
+                    tower.rect.x + 5,
+                    tower.rect.y + 5,
+                    60,
+                    60
+                };
 
-        SDL_Rect towerTwo = {
-            250,
-            700,
-            70,
-            70
-        };
+                if (tower.level == 1)
+                {
+                    SDL_SetRenderDrawColor(
+                        renderer,
+                        50,
+                        100,
+                        255,
+                        255
+                    );
+                }
+                if (tower.level == 2)
+                {
+                    SDL_SetRenderDrawColor(
+                        renderer,
+                        255,
+                        180,
+                        0,
+                        255
+                    );
+                }
 
-        SDL_SetRenderDrawColor(
-            renderer,
-            0,
-            0,
-            0,
-            255
-        );
-
-        SDL_RenderFillRect(
-            renderer,
-            &towerTwo
-        );
+                SDL_RenderFillRect(
+                    renderer,
+                    &towerVisual
+                );
+            }
+        }
 
         SDL_Rect castle = {
             1700,
