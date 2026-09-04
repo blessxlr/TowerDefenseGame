@@ -26,6 +26,24 @@ struct Bot {
     bool alive;
 };
 
+struct Tower
+{
+    int x;
+    int y;
+
+    int size;
+
+    int level;
+
+    int range;
+    int damage;
+
+    float attackCooldown;
+    float attackTimer;
+
+    bool bulit;
+};
+
 int main()
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -95,7 +113,7 @@ int main()
     float waveInterval = 5.0f;
     bool gameWavesFinished = false;
 
-    int playerMoney = 0;
+    int playerMoney = 30;
     int castleHealth = 1000;
     int castleMaxHealth = 1000;
 
@@ -675,6 +693,46 @@ int main()
         SDL_RenderFillRect(
             renderer,
             &roadTen
+        );
+
+        SDL_Rect towerOne = {
+            250,
+            500,
+            70,
+            70
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            0,
+            0,
+            0,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &towerOne
+        );
+
+        SDL_Rect towerTwo = {
+            250,
+            700,
+            70,
+            70
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            0,
+            0,
+            0,
+            255
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &towerTwo
         );
 
         SDL_Rect castle = {
