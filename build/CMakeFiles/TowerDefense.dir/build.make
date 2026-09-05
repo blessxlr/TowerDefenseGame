@@ -92,6 +92,7 @@ TowerDefense_EXTERNAL_OBJECTS =
 
 TowerDefense: CMakeFiles/TowerDefense.dir/src/main.cpp.o
 TowerDefense: CMakeFiles/TowerDefense.dir/build.make
+TowerDefense: /usr/lib/x86_64-linux-gnu/libSDL2_ttf.so
 TowerDefense: /usr/lib/x86_64-linux-gnu/libSDL2.so
 TowerDefense: CMakeFiles/TowerDefense.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/max/TowerDefenseGame/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable TowerDefense"
