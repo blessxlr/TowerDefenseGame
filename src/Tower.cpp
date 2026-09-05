@@ -93,66 +93,65 @@ void UpdateTowers(
         float towerCenterY =
             tower.rect.y + tower.rect.h / 2.0f;
 
-        Bot* target = nullptr;
-
-        float closestDistance =
-            static_cast<float>(tower.range);
-
-        for (Bot& bot : bots)
+        bool currentTargetValid = false;
+        if (tower.targetIndex >= 0 &&
+            tower.targetIndex < static_cast<int>(bots.size())
+        )
         {
-            if (!bot.alive)
+            Bot &currentTarget = bots[tower.targetIndex];
+            float dx = currentTarget.x - towerCenterX;
+            float dy = currentTarget.y - towerCenterY;
+
+            float distance = std::sqrt(dx * dx + dy * dy);
+            if (currentTarget.alive && distance <= tower.range)
             {
-                continue;
+                currentTargetValid = true;
             }
-
-            float botCenterX =
-                bot.x + bot.size / 2.0f;
-
-            float botCenterY =
-                bot.y + bot.size / 2.0f;
-
-            float dx =
-                botCenterX - towerCenterX;
-
-            float dy =
-                botCenterY - towerCenterY;
-
-            float distance =
-                std::sqrt(dx * dx + dy * dy);
-
-            if (distance < closestDistance)
+            else
             {
-                closestDistance = distance;
-                target = &bot;
+                tower.targetIndex = -1;
+            }
+        }
+        if (!currentTargetValid)
+        {
+            float closetDistance = static_cast<float>(tower.range);
+
+            for(int i = 0; i < static_cast<int>(bots.size()); i++)
+            {
+                Bot &bot = bots[i];
+                if (!bot.alive)
+                {
+                    continue;
+                }
+
+                float dx = bot.x - towerCenterX;
+                float dy = bot.y - towerCenterY;
+                float distance = std::sqrt(dx * dx + dy * dy);
+
+                if (distance <= closetDistance)
+                {
+                    closetDistance = distance;
+                    tower.targetIndex = i;
+                    currentTargetValid = true;
+                }
             }
         }
 
-        if (
-            target != nullptr
-            && tower.attackTimer >= tower.attackCooldown
-        )
+        if (currentTargetValid && tower.attackTimer >= tower.attackCooldown)
         {
-            target->health -= tower.damage;
-
+            Bot &target = bots[tower.targetIndex];
+            target.health -= tower.damage;
             tower.shooting = true;
             tower.shootingTimer = 0.1f;
+            tower.targetX = target.x;
+            tower.targetY = target.y;
 
-            tower.targetX =
-                target->x + target->size / 2.0f;
-
-            tower.targetY =
-                target->y + target->size / 2.0f;
-
-            if (target->health <= 0)
+            if (target.health <= 0)
             {
-                target->health = 0;
-                target->alive = false;
-
-                playerMoney += target->reward;
-
-                std::cout
-                    << "Tower killed enemy"
-                    << std::endl;
+                target.health = 0;
+                target.alive = false;
+                playerMoney += target.reward;
+                tower.targetIndex = -1;
             }
 
             tower.attackTimer = 0.0f;

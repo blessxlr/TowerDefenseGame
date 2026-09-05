@@ -13,6 +13,7 @@
 
 Game::Game()
 {
+    gameState = GameState::StartScreen;
 }
 
 bool Game::Init()
@@ -97,6 +98,13 @@ void Game::Run()
         return;
     }
 
+    SDL_Rect startButton = {
+        760,
+        500,
+        400,
+        100
+    };
+
     std::vector<Point> path = {
         {545, 635},
         {545, 170},
@@ -124,7 +132,8 @@ void Game::Run()
         false,
         0.0f,
         0.0f,
-        0.0f
+        0.0f,
+        -1
     });
 
     towers.push_back({
@@ -138,7 +147,8 @@ void Game::Run()
         false,
         0.0f,
         0.0f,
-        0.0f
+        0.0f,
+        -1
     });
 
     int currentWave = 1;
@@ -146,8 +156,8 @@ void Game::Run()
     int botsSpawned = 0;
     int maxBots = 5;
 
-    float spawnTimer = 2.0f;
-    float spawnInterval = 2.0f;
+    float spawnTimer = 0.0f;
+    float spawnInterval = 1.5f;
 
     bool waitingForNextWave = false;
 
@@ -185,9 +195,27 @@ void Game::Run()
                 running = false;
             }
 
-            if (
-                event.type == SDL_KEYDOWN
+            if (event.type == SDL_MOUSEBUTTONDOWN
+                && event.button.button == SDL_BUTTON_LEFT
+                && gameState == GameState::StartScreen
+            )
+            {
+                int mouseX = event.button.x;
+                int mouseY = event.button.y;
+
+                if (mouseX >= startButton.x &&
+                    mouseX <= startButton.x + startButton.w &&
+                    mouseY >= startButton.y &&
+                    mouseY <= startButton.y + startButton.h
+                )
+                {
+                    gameState = GameState::Playing;
+                }
+            }
+
+            if (event.type == SDL_KEYDOWN
                 && event.key.keysym.sym == SDLK_SPACE
+                && gameState == GameState::Playing
                 && !gameOver
                 && !gameWon
             )
@@ -204,6 +232,7 @@ void Game::Run()
             if (
                 event.type == SDL_MOUSEBUTTONDOWN
                 && event.button.button == SDL_BUTTON_LEFT
+                && gameState == GameState::Playing
                 && !gameOver
                 && !gameWon
             )
@@ -217,7 +246,7 @@ void Game::Run()
             }
         }
 
-        if (!gameOver && !gameWon)
+        if (gameState == GameState::Playing && !gameOver && !gameWon)
         {
             if (
                 botsSpawned < maxBots
@@ -368,36 +397,90 @@ void Game::Run()
 
         SDL_RenderClear(renderer);
 
-        RenderMap(renderer);
-
-        RenderTowers(
-            renderer,
-            towers
-        );
-
-        RenderBots(
-            renderer,
-            bots
-        );
-
-        int aliveEnemies = 0;
-
-        for (const Bot& bot : bots)
+        if (gameState == GameState::StartScreen)
         {
-            if (bot.alive)
+            SDL_SetRenderDrawColor(
+                renderer,
+                50,
+                150,
+                80,
+                255
+            );
+
+            SDL_RenderFillRect(
+                renderer,
+                &startButton
+            );
+
+            SDL_Color textColor = {255, 255, 255, 255};
+
+            SDL_Surface *surface = TTF_RenderText_Blended(
+                font,
+                "START",
+                textColor
+            );
+
+            if (surface != nullptr)
             {
-                aliveEnemies++;
+                SDL_Texture *texture = SDL_CreateTextureFromSurface(
+                    renderer,
+                    surface
+                );
+
+                if (texture != nullptr)
+                {
+                    SDL_Rect textRect;
+                    textRect.w = surface->w;
+                    textRect.h = surface->h;
+                    textRect.x = startButton.x + (startButton.w - textRect.w) / 2;
+                    textRect.y = startButton.y + (startButton.h - textRect.h) / 2;
+
+                    SDL_RenderCopy(
+                        renderer,
+                        texture,
+                        nullptr,
+                        &textRect
+                    );
+
+                    SDL_DestroyTexture(texture);
+                }
+                SDL_FreeSurface(surface);
             }
         }
+        else if (gameState == GameState::Playing)
+        {
 
-        RenderHUD(
-            renderer,
-            font,
-            playerMoney,
-            castleHealth,
-            currentWave,
-            aliveEnemies
-        );
+            RenderMap(renderer);
+
+            RenderTowers(
+                renderer,
+                towers
+            );
+
+            RenderBots(
+                renderer,
+                bots
+            );
+
+            int aliveEnemies = 0;
+
+            for (const Bot& bot : bots)
+            {
+                if (bot.alive)
+                {
+                     aliveEnemies++;
+                }
+            }
+
+            RenderHUD(
+                renderer,
+                font,
+                playerMoney,
+                castleHealth,
+                currentWave,
+                aliveEnemies
+            );
+        }
 
         SDL_RenderPresent(renderer);
     }

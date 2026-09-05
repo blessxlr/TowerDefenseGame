@@ -23,6 +23,8 @@ struct Tower
 
     float targetX;
     float targetY;
+
+    int targetIndex;
 };
 
 void HandleTowerClick(

@@ -11,6 +11,17 @@ pkg_check_modules(SDL2_TTF REQUIRED IMPORTED_TARGET SDL2_ttf)
 
 add_executable(TowerDefense
     src/main.cpp
+    src/Game.cpp
+    src/Map.cpp
+    src/Tower.cpp
+    src/Enemy.cpp
+    src/UI.cpp
+)
+
+target_include_directories(
+    TowerDefense
+    PRIVATE
+    include
 )
 
 target_link_libraries(TowerDefense
