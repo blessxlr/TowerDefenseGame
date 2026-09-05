@@ -48,6 +48,7 @@ CMakeFiles/TowerDefense.dir/src/main.cpp.o: /home/max/TowerDefenseGame/src/main.
   /usr/include/SDL2/SDL_thread.h \
   /usr/include/SDL2/SDL_timer.h \
   /usr/include/SDL2/SDL_touch.h \
+  /usr/include/SDL2/SDL_ttf.h \
   /usr/include/SDL2/SDL_version.h \
   /usr/include/SDL2/SDL_video.h \
   /usr/include/SDL2/begin_code.h \
@@ -562,8 +563,6 @@ CMakeFiles/TowerDefense.dir/src/main.cpp.o: /home/max/TowerDefenseGame/src/main.
 
 /usr/include/c++/13/system_error:
 
-/usr/include/c++/13/bits/ptr_traits.h:
-
 /usr/include/c++/13/bits/predefined_ops.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/prfchwintrin.h:
@@ -650,6 +649,12 @@ CMakeFiles/TowerDefense.dir/src/main.cpp.o: /home/max/TowerDefenseGame/src/main.
 
 /usr/include/c++/13/bits/basic_ios.tcc:
 
+/usr/include/c++/13/bits/basic_ios.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/13/include/shaintrin.h:
+
+/usr/include/x86_64-linux-gnu/bits/time64.h:
+
 /usr/include/SDL2/SDL_messagebox.h:
 
 /usr/include/SDL2/SDL_loadso.h:
@@ -683,18 +688,6 @@ CMakeFiles/TowerDefense.dir/src/main.cpp.o: /home/max/TowerDefenseGame/src/main.
 /usr/include/c++/13/bits/locale_facets.h:
 
 /usr/include/SDL2/SDL.h:
-
-/usr/include/c++/13/bits/basic_ios.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/13/include/shaintrin.h:
-
-/usr/include/x86_64-linux-gnu/bits/time64.h:
-
-/usr/include/c++/13/exception:
-
-/usr/include/c++/13/bits/stl_pair.h:
-
-/usr/include/x86_64-linux-gnu/bits/errno.h:
 
 /usr/include/SDL2/SDL_hidapi.h:
 
@@ -810,6 +803,8 @@ CMakeFiles/TowerDefense.dir/src/main.cpp.o: /home/max/TowerDefenseGame/src/main.
 
 /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h:
 
+/usr/include/c++/13/bits/ptr_traits.h:
+
 /usr/include/c++/13/bits/stl_construct.h:
 
 /usr/include/SDL2/SDL_filesystem.h:
@@ -900,9 +895,17 @@ CMakeFiles/TowerDefense.dir/src/main.cpp.o: /home/max/TowerDefenseGame/src/main.
 
 /usr/include/SDL2/SDL_pixels.h:
 
+/usr/include/c++/13/exception:
+
+/usr/include/c++/13/bits/stl_pair.h:
+
+/usr/include/x86_64-linux-gnu/bits/errno.h:
+
 /usr/include/c++/13/ext/alloc_traits.h:
 
 /usr/include/c++/13/new:
+
+/usr/include/SDL2/SDL_ttf.h:
 
 /usr/include/inttypes.h:
 
@@ -929,6 +932,10 @@ CMakeFiles/TowerDefense.dir/src/main.cpp.o: /home/max/TowerDefenseGame/src/main.
 /usr/include/c++/13/limits:
 
 /usr/include/c++/13/pstl/pstl_config.h:
+
+/usr/include/x86_64-linux-gnu/c++/13/bits/atomic_word.h:
+
+/usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/waitpkgintrin.h:
 
@@ -1111,7 +1118,3 @@ CMakeFiles/TowerDefense.dir/src/main.cpp.o: /home/max/TowerDefenseGame/src/main.
 /usr/include/x86_64-linux-gnu/bits/types/time_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
-
-/usr/include/x86_64-linux-gnu/bits/wordsize.h:
-
-/usr/include/x86_64-linux-gnu/c++/13/bits/atomic_word.h:

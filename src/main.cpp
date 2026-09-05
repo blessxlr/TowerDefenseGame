@@ -1,7 +1,48 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <string>
+
+void DrawText(
+    SDL_Renderer *renderer,
+    TTF_Font *font,
+    const std::string &text,
+    int x,
+    int y,
+    SDL_Color color
+)
+{
+    SDL_Surface *textSurface = TTF_RenderText_Solid(
+        font,
+        text.c_str(),
+        color
+    );
+    if (textSurface == nullptr)
+    {
+        return;
+    }
+    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(
+        renderer,
+        textSurface
+    );
+    SDL_Rect textRect = {
+        x,
+        y,
+        textSurface->w,
+        textSurface->h
+    };
+    SDL_FreeSurface(textSurface);
+    SDL_RenderCopy(
+        renderer,
+        textTexture,
+        nullptr,
+        &textRect
+    );
+
+    SDL_DestroyTexture(textTexture);
+}
 
 struct Point {
     float x;
@@ -55,6 +96,12 @@ int main()
         return 1;
     }
 
+    if (TTF_Init() == -1)
+    {
+        std::cout << "Ошибка SDL_ttf: " << TTF_GetError() << std::endl;
+        return 1;
+    }
+
     SDL_Window *window = SDL_CreateWindow(
         "Tower Defense",
         SDL_WINDOWPOS_CENTERED,
@@ -83,6 +130,21 @@ int main()
         SDL_DestroyWindow(window);
         SDL_Quit();
 
+        return 1;
+    }
+
+    SDL_SetRenderDrawBlendMode(
+        renderer,
+        SDL_BLENDMODE_BLEND
+    );
+
+    TTF_Font *font = TTF_OpenFont(
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24
+    );
+
+    if (font == nullptr)
+    {
+        std::cout << "Ошибка загрузки шрифта: " << TTF_GetError() << std::endl;
         return 1;
     }
 
@@ -966,8 +1028,41 @@ int main()
             }
         }
 
+        SDL_Rect infoDisplay = {
+            0,
+            0,
+            300,
+            150
+        };
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            34,
+            159,
+            34,
+            105
+        );
+
+        SDL_RenderFillRect(
+            renderer,
+            &infoDisplay
+        );
+
+        SDL_Color white = {255, 255, 255, 255};
+
+        DrawText(
+            renderer,
+            font,
+            "Money: " + std::to_string(playerMoney),
+            20,
+            15,
+            white
+        );
+
         SDL_RenderPresent(renderer);
     }
+
+    TTF_CloseFont(font);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
