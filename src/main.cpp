@@ -1050,12 +1050,49 @@ int main()
 
         SDL_Color white = {255, 255, 255, 255};
 
+        int aliveEnemies = 0;
+
+        for (const Bot &bot : bots)
+        {
+            if (bot.alive)
+            {
+                aliveEnemies++;
+            }
+        }
+
         DrawText(
             renderer,
             font,
             "Money: " + std::to_string(playerMoney),
             20,
             15,
+            white
+        );
+
+        DrawText(
+            renderer,
+            font,
+            "Castle Health: " + std::to_string(castleHealth),
+            20,
+            45,
+            white
+        );
+
+        DrawText(
+            renderer,
+            font,
+            "Wave: " + std::to_string(currentWave),
+            20,
+            75,
+            white
+        );
+
+        DrawText(
+            renderer,
+            font,
+            "Enemies: " + std::to_string(aliveEnemies),
+            20,
+            105,
             white
         );
 
