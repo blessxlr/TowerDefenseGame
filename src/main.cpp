@@ -39,6 +39,12 @@ struct Tower
     float attackTimer;
 
     bool built;
+
+    bool shooting;
+    float shootingTimer;
+
+    float targetX;
+    float targetY;
 };
 
 int main()
@@ -106,7 +112,11 @@ int main()
         0,
         0.0f,
         0.0f,
-        false
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f
     });
 
     towers.push_back({
@@ -116,7 +126,11 @@ int main()
         0,
         0.0f,
         0.0f,
-        false
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f
     });
 
     int currentWave = 1;
@@ -300,6 +314,77 @@ int main()
                         }
                  }
             }
+
+            for (Tower &tower : towers)
+            {
+                if (!tower.built)
+                {
+                    continue;
+                }
+
+                if (tower.shooting)
+                {
+                    tower.shootingTimer -= deltaTime;
+                    if (tower.shootingTimer <= 0.0f)
+                    {
+                        tower.shooting = false;
+                    }
+                }
+
+                tower.attackTimer += deltaTime;
+
+                float towerCenterX = tower.rect.x + tower.rect.w / 2.0f;
+                float towerCenterY = tower.rect.y + tower.rect.h / 2.0f;
+
+                Bot *target = nullptr;
+                float closestDistance = static_cast<float>(tower.range);
+
+                for (Bot &bot : bots)
+                {
+                    if (!bot.alive)
+                    {
+                        continue;
+                    }
+                float botCenterX = bot.x + bot.size / 2.0f;
+                float botCenterY = bot.y + bot.size / 2.0f;
+
+                float dx = botCenterX - towerCenterX;
+                float dy = botCenterY - towerCenterY;
+
+                float distance = std::sqrt(dx * dx + dy * dy);
+
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    target = &bot;
+                }
+            }
+            if (target != nullptr)
+            {
+                if (tower.attackTimer >= tower.attackCooldown)
+                {
+                    target->health -= tower.damage;
+
+                    tower.shooting = true;
+                    tower.shootingTimer = 0.1f;
+
+                    tower.targetX = target->x + target->size / 2.0f;
+                    tower.targetY = target->y + target->size / 2.0f;
+
+                    std::cout << "Tower hit " << tower.damage << " to bot" << std::endl;
+
+                    if (target->health <= 0)
+                    {
+                        target->health = 0;
+                        target->alive = false;
+                        playerMoney += target->reward;
+                        std::cout << "Tower killed the bot" << std::endl;
+                    }
+
+                    tower.attackTimer = 0.0f;
+                }
+            }
+        }
 
             for (Bot &bot : bots)
             {
@@ -814,6 +899,26 @@ int main()
                 SDL_RenderFillRect(
                     renderer,
                     &towerVisual
+                );
+            }
+            if (tower.shooting)
+            {
+                SDL_SetRenderDrawColor(
+                    renderer,
+                    255,
+                    0,
+                    0,
+                    255
+                );
+
+                int towerCenterX = tower.rect.x + tower.rect.w / 2;
+                int towerCenterY = tower.rect.y + tower.rect.h / 2;
+                SDL_RenderDrawLine(
+                    renderer,
+                    towerCenterX,
+                    towerCenterY,
+                    static_cast<int>(tower.targetX),
+                    static_cast<int>(tower.targetY)
                 );
             }
         }
