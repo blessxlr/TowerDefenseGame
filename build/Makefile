@@ -129,6 +129,126 @@ TowerDefense/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/build
 .PHONY : TowerDefense/fast
 
+src/Enemy.o: src/Enemy.cpp.o
+.PHONY : src/Enemy.o
+
+# target to build an object file
+src/Enemy.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Enemy.cpp.o
+.PHONY : src/Enemy.cpp.o
+
+src/Enemy.i: src/Enemy.cpp.i
+.PHONY : src/Enemy.i
+
+# target to preprocess a source file
+src/Enemy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Enemy.cpp.i
+.PHONY : src/Enemy.cpp.i
+
+src/Enemy.s: src/Enemy.cpp.s
+.PHONY : src/Enemy.s
+
+# target to generate assembly for a file
+src/Enemy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Enemy.cpp.s
+.PHONY : src/Enemy.cpp.s
+
+src/Game.o: src/Game.cpp.o
+.PHONY : src/Game.o
+
+# target to build an object file
+src/Game.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Game.cpp.o
+.PHONY : src/Game.cpp.o
+
+src/Game.i: src/Game.cpp.i
+.PHONY : src/Game.i
+
+# target to preprocess a source file
+src/Game.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Game.cpp.i
+.PHONY : src/Game.cpp.i
+
+src/Game.s: src/Game.cpp.s
+.PHONY : src/Game.s
+
+# target to generate assembly for a file
+src/Game.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Game.cpp.s
+.PHONY : src/Game.cpp.s
+
+src/Map.o: src/Map.cpp.o
+.PHONY : src/Map.o
+
+# target to build an object file
+src/Map.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Map.cpp.o
+.PHONY : src/Map.cpp.o
+
+src/Map.i: src/Map.cpp.i
+.PHONY : src/Map.i
+
+# target to preprocess a source file
+src/Map.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Map.cpp.i
+.PHONY : src/Map.cpp.i
+
+src/Map.s: src/Map.cpp.s
+.PHONY : src/Map.s
+
+# target to generate assembly for a file
+src/Map.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Map.cpp.s
+.PHONY : src/Map.cpp.s
+
+src/Tower.o: src/Tower.cpp.o
+.PHONY : src/Tower.o
+
+# target to build an object file
+src/Tower.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Tower.cpp.o
+.PHONY : src/Tower.cpp.o
+
+src/Tower.i: src/Tower.cpp.i
+.PHONY : src/Tower.i
+
+# target to preprocess a source file
+src/Tower.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Tower.cpp.i
+.PHONY : src/Tower.cpp.i
+
+src/Tower.s: src/Tower.cpp.s
+.PHONY : src/Tower.s
+
+# target to generate assembly for a file
+src/Tower.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/Tower.cpp.s
+.PHONY : src/Tower.cpp.s
+
+src/UI.o: src/UI.cpp.o
+.PHONY : src/UI.o
+
+# target to build an object file
+src/UI.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/UI.cpp.o
+.PHONY : src/UI.cpp.o
+
+src/UI.i: src/UI.cpp.i
+.PHONY : src/UI.i
+
+# target to preprocess a source file
+src/UI.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/UI.cpp.i
+.PHONY : src/UI.cpp.i
+
+src/UI.s: src/UI.cpp.s
+.PHONY : src/UI.s
+
+# target to generate assembly for a file
+src/UI.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TowerDefense.dir/build.make CMakeFiles/TowerDefense.dir/src/UI.cpp.s
+.PHONY : src/UI.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -162,6 +282,21 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... TowerDefense"
+	@echo "... src/Enemy.o"
+	@echo "... src/Enemy.i"
+	@echo "... src/Enemy.s"
+	@echo "... src/Game.o"
+	@echo "... src/Game.i"
+	@echo "... src/Game.s"
+	@echo "... src/Map.o"
+	@echo "... src/Map.i"
+	@echo "... src/Map.s"
+	@echo "... src/Tower.o"
+	@echo "... src/Tower.i"
+	@echo "... src/Tower.s"
+	@echo "... src/UI.o"
+	@echo "... src/UI.i"
+	@echo "... src/UI.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

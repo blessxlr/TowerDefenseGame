@@ -8,6 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/max/TowerDefenseGame/src/Enemy.cpp" "CMakeFiles/TowerDefense.dir/src/Enemy.cpp.o" "gcc" "CMakeFiles/TowerDefense.dir/src/Enemy.cpp.o.d"
+  "/home/max/TowerDefenseGame/src/Game.cpp" "CMakeFiles/TowerDefense.dir/src/Game.cpp.o" "gcc" "CMakeFiles/TowerDefense.dir/src/Game.cpp.o.d"
+  "/home/max/TowerDefenseGame/src/Map.cpp" "CMakeFiles/TowerDefense.dir/src/Map.cpp.o" "gcc" "CMakeFiles/TowerDefense.dir/src/Map.cpp.o.d"
+  "/home/max/TowerDefenseGame/src/Tower.cpp" "CMakeFiles/TowerDefense.dir/src/Tower.cpp.o" "gcc" "CMakeFiles/TowerDefense.dir/src/Tower.cpp.o.d"
+  "/home/max/TowerDefenseGame/src/UI.cpp" "CMakeFiles/TowerDefense.dir/src/UI.cpp.o" "gcc" "CMakeFiles/TowerDefense.dir/src/UI.cpp.o.d"
   "/home/max/TowerDefenseGame/src/main.cpp" "CMakeFiles/TowerDefense.dir/src/main.cpp.o" "gcc" "CMakeFiles/TowerDefense.dir/src/main.cpp.o.d"
   )
 

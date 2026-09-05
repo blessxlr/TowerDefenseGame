@@ -1,0 +1,415 @@
+#include "Game.h"
+
+#include "Enemy.h"
+#include "Map.h"
+#include "Tower.h"
+#include "UI.h"
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
+#include <iostream>
+#include <vector>
+
+Game::Game()
+{
+}
+
+bool Game::Init()
+{
+    return true;
+}
+
+void Game::Run()
+{
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        std::cerr
+            << "Ошибка SDL: "
+            << SDL_GetError()
+            << std::endl;
+
+        return;
+    }
+
+    if (TTF_Init() == -1)
+    {
+        std::cerr
+            << "Ошибка SDL_ttf: "
+            << TTF_GetError()
+            << std::endl;
+
+        SDL_Quit();
+
+        return;
+    }
+
+    SDL_Window* window = SDL_CreateWindow(
+        "Tower Defense",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        1920,
+        1080,
+        SDL_WINDOW_SHOWN
+    );
+
+    if (window == nullptr)
+    {
+        std::cerr << SDL_GetError() << std::endl;
+        return;
+    }
+
+    SDL_Renderer* renderer =
+        SDL_CreateRenderer(
+            window,
+            -1,
+            SDL_RENDERER_ACCELERATED
+        );
+
+    if (renderer == nullptr)
+    {
+        std::cerr << SDL_GetError() << std::endl;
+
+        SDL_DestroyWindow(window);
+
+        return;
+    }
+
+    SDL_SetRenderDrawBlendMode(
+        renderer,
+        SDL_BLENDMODE_BLEND
+    );
+
+    TTF_Font* font = TTF_OpenFont(
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        24
+    );
+
+    if (font == nullptr)
+    {
+        std::cerr
+            << TTF_GetError()
+            << std::endl;
+
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+
+        return;
+    }
+
+    std::vector<Point> path = {
+        {545, 635},
+        {545, 170},
+        {735, 170},
+        {1015, 170},
+        {1015, 685},
+        {1015, 805},
+        {1440, 805},
+        {1440, 405},
+        {1685, 405}
+    };
+
+    std::vector<Bot> bots;
+
+    std::vector<Tower> towers;
+
+    towers.push_back({
+        {250, 500, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f
+    });
+
+    towers.push_back({
+        {250, 700, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f
+    });
+
+    int currentWave = 1;
+
+    int botsSpawned = 0;
+    int maxBots = 5;
+
+    float spawnTimer = 2.0f;
+    float spawnInterval = 2.0f;
+
+    bool waitingForNextWave = false;
+
+    float waveTimer = 0.0f;
+    float waveInterval = 5.0f;
+
+    bool gameWavesFinished = false;
+
+    int playerMoney = 30;
+
+    int castleHealth = 1000;
+
+    bool gameOver = false;
+    bool gameWon = false;
+
+    bool running = true;
+
+    SDL_Event event;
+
+    Uint64 previousTime = SDL_GetTicks64();
+
+    while (running)
+    {
+        Uint64 currentTime = SDL_GetTicks64();
+
+        float deltaTime =
+            (currentTime - previousTime)
+            / 1000.0f;
+
+        previousTime = currentTime;
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT)
+            {
+                running = false;
+            }
+
+            if (
+                event.type == SDL_KEYDOWN
+                && event.key.keysym.sym == SDLK_SPACE
+                && !gameOver
+                && !gameWon
+            )
+            {
+                for (Bot& bot : bots)
+                {
+                    if (bot.alive)
+                    {
+                        bot.health -= 25;
+                    }
+                }
+            }
+
+            if (
+                event.type == SDL_MOUSEBUTTONDOWN
+                && event.button.button == SDL_BUTTON_LEFT
+                && !gameOver
+                && !gameWon
+            )
+            {
+                HandleTowerClick(
+                    towers,
+                    event.button.x,
+                    event.button.y,
+                    playerMoney
+                );
+            }
+        }
+
+        if (!gameOver && !gameWon)
+        {
+            if (
+                botsSpawned < maxBots
+                && !waitingForNextWave
+                && !gameWavesFinished
+            )
+            {
+                spawnTimer += deltaTime;
+
+                if (spawnTimer >= spawnInterval)
+                {
+                    bool isBoss =
+                        currentWave == 3
+                        && botsSpawned == 14;
+
+                    if (isBoss)
+                    {
+                        bots.push_back({
+                            15.0f,
+                            635.0f,
+                            50,
+                            40.0f,
+                            300,
+                            300,
+                            50,
+                            125,
+                            0,
+                            false,
+                            true
+                        });
+                    }
+                    else
+                    {
+                        bots.push_back({
+                            15.0f,
+                            635.0f,
+                            30,
+                            50.0f,
+                            100,
+                            100,
+                            10,
+                            50,
+                            0,
+                            false,
+                            true
+                        });
+                    }
+
+                    botsSpawned++;
+
+                    spawnTimer = 0.0f;
+                }
+            }
+
+            CheckBotDeaths(
+                bots,
+                playerMoney
+            );
+
+            UpdateBots(
+                bots,
+                path,
+                deltaTime
+            );
+
+            UpdateTowers(
+                towers,
+                bots,
+                playerMoney,
+                deltaTime
+            );
+
+            CheckCastleReach(
+                bots,
+                path,
+                castleHealth,
+                gameOver
+            );
+
+            if (
+                botsSpawned >= maxBots
+                && !waitingForNextWave
+                && !gameWavesFinished
+            )
+            {
+                bool allBotsFinished = true;
+
+                for (const Bot& bot : bots)
+                {
+                    if (bot.alive)
+                    {
+                        allBotsFinished = false;
+                        break;
+                    }
+                }
+
+                if (allBotsFinished)
+                {
+                    if (currentWave < 3)
+                    {
+                        waitingForNextWave = true;
+                        waveTimer = 0.0f;
+                    }
+                    else
+                    {
+                        gameWavesFinished = true;
+                        gameWon = true;
+                    }
+                }
+            }
+
+            if (
+                waitingForNextWave
+                && !gameWavesFinished
+            )
+            {
+                waveTimer += deltaTime;
+
+                if (waveTimer >= waveInterval)
+                {
+                    currentWave++;
+
+                    botsSpawned = 0;
+
+                    spawnTimer = spawnInterval;
+
+                    waitingForNextWave = false;
+
+                    if (currentWave == 2)
+                    {
+                        maxBots = 8;
+                    }
+                    else if (currentWave == 3)
+                    {
+                        maxBots = 15;
+                    }
+                }
+            }
+        }
+
+        SDL_SetRenderDrawColor(
+            renderer,
+            34,
+            139,
+            34,
+            255
+        );
+
+        SDL_RenderClear(renderer);
+
+        RenderMap(renderer);
+
+        RenderTowers(
+            renderer,
+            towers
+        );
+
+        RenderBots(
+            renderer,
+            bots
+        );
+
+        int aliveEnemies = 0;
+
+        for (const Bot& bot : bots)
+        {
+            if (bot.alive)
+            {
+                aliveEnemies++;
+            }
+        }
+
+        RenderHUD(
+            renderer,
+            font,
+            playerMoney,
+            castleHealth,
+            currentWave,
+            aliveEnemies
+        );
+
+        SDL_RenderPresent(renderer);
+    }
+
+    TTF_CloseFont(font);
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    TTF_Quit();
+    SDL_Quit();
+}
+
+void Game::Cleanup()
+{
+}
