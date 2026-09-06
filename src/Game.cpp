@@ -105,6 +105,13 @@ void Game::Run()
         100
     };
 
+    SDL_Rect restartButton = {
+        760,
+        500,
+        400,
+        100
+    };
+
     std::vector<Point> path = {
         {545, 635},
         {545, 170},
@@ -212,6 +219,55 @@ void Game::Run()
                     gameState = GameState::Playing;
                 }
             }
+
+            if (event.type == SDL_MOUSEBUTTONDOWN
+                && event.button.button == SDL_BUTTON_LEFT
+                && gameState == GameState::GameOver
+            )
+            {
+                int mouseX = event.button.x;
+                int mouseY = event.button.y;
+
+                if (
+                   mouseX >= restartButton.x &&
+                   mouseX <= restartButton.x + restartButton.w &&
+                   mouseY >= restartButton.y &&
+                   mouseY <= restartButton.y + restartButton.h
+               )
+               {
+                   bots.clear();
+
+                   currentWave = 1;
+                   botsSpawned = 0;
+                   maxBots = 5;
+
+                   spawnTimer = 0.0f;
+                   waitingForNextWave = false;
+                   waveTimer = 0.0f;
+
+                   gameWavesFinished = false;
+                   gameOver = false;
+                   gameWon = false;
+
+                   playerMoney = 30;
+                   castleHealth = 1000;
+
+                   for (Tower &tower : towers)
+                   {
+                       tower.built = false;
+                       tower.level = 0;
+                       tower.range = 0;
+                       tower.damage = 0;
+
+                       tower.attackTimer = 0.0f;
+                       tower.shooting = false;
+                       tower.shootingTimer = 0.0f;
+                       tower.targetIndex = -1;
+                   }
+
+                   gameState = GameState::Playing;
+               }
+           }
 
             if (event.type == SDL_KEYDOWN
                 && event.key.keysym.sym == SDLK_SPACE
@@ -325,6 +381,11 @@ void Game::Run()
                 castleHealth,
                 gameOver
             );
+
+            if (gameOver)
+            {
+                gameState = GameState::GameOver;
+            }
 
             if (
                 botsSpawned >= maxBots
@@ -479,6 +540,56 @@ void Game::Run()
                 castleHealth,
                 currentWave,
                 aliveEnemies
+            );
+        }
+
+        else if (gameState == GameState::GameOver)
+        {
+            SDL_SetRenderDrawColor(
+                renderer,
+                60,
+                20,
+                20,
+                255
+            );
+            SDL_RenderClear(renderer);
+
+            SDL_Color textColor = {
+                255,
+                255,
+                255,
+                255
+            };
+
+            DrawText(
+                renderer,
+                font,
+                "GAME OVER",
+                860,
+                350,
+                textColor
+            );
+
+            SDL_SetRenderDrawColor(
+                renderer,
+                180,
+                50,
+                50,
+                255
+            );
+
+            SDL_RenderFillRect(
+                renderer,
+                &restartButton
+            );
+
+            DrawText(
+                renderer,
+                font,
+                "RESTART",
+                890,
+                535,
+                textColor
             );
         }
 
