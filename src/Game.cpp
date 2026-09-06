@@ -158,6 +158,96 @@ void Game::Run()
         -1
     });
 
+    towers.push_back({
+        {410, 305, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f,
+        -1
+    });
+
+    towers.push_back({
+        {1080, 360, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f,
+        -1
+    });
+
+    towers.push_back({
+        {1305, 500, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f,
+        -1
+    });
+
+    towers.push_back({
+        {1600, 270, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f,
+        -1
+    });
+
+    towers.push_back({
+        {1085, 870, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f,
+        -1
+    });
+
+    towers.push_back({
+        {1230, 870, 70, 70},
+        0,
+        0,
+        0,
+        0.0f,
+        0.0f,
+        false,
+        false,
+        0.0f,
+        0.0f,
+        0.0f,
+        -1
+    });
+
     int currentWave = 1;
 
     int botsSpawned = 0;
@@ -173,9 +263,9 @@ void Game::Run()
 
     bool gameWavesFinished = false;
 
-    int playerMoney = 30;
+    int playerMoney = 40;
 
-    int castleHealth = 1000;
+    int castleHealth = 500;
 
     bool gameOver = false;
     bool gameWon = false;
